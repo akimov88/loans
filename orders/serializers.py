@@ -1,21 +1,23 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework import serializers
 from orders.models import Order
 
 
-class ReadOrderSerializer(ModelSerializer):
-    class Meta:
-        model = Order
-        fields = ('user_id', 'amount_requested', 'amount_approved',
-                  'period_requested', 'period_approved', 'sign',
-                  'contract', 'status')
-        read_only_fields = fields
+class CurrentUserIdDefault:
+    requires_context = True
+
+    def __call__(self, serializer_field):
+        return serializer_field.context['request'].user.id
 
 
-class CreateOrderSerializer(ModelSerializer):
+class ReadOrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
-        fields = ('id', 'user_id', 'amount_requested', 'period_requested',
-                  'amount_approved', 'period_approved', 'sign',
-                  'contract', 'status')
-        read_only_fields = ('id', 'amount_approved', 'period_approved',
-                            'sign', 'contract', 'status')
+        fields = '__all__'
+
+
+class CreateOrderSerializer(serializers.ModelSerializer):
+    user_id = serializers.HiddenField(default=CurrentUserIdDefault())
+
+    class Meta:
+        model = Order
+        fields = ('user_id', 'amount_requested', 'period_requested')
