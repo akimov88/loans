@@ -39,7 +39,7 @@ def create_order_task(user_id, amount_requested, period_requested):
 
 
 @app.task
-def check_orders_lifetime_task():
+def check_order_lifetime_task():
     order_lifetime_min = timedelta(minutes=1)
     last_hour_orders = Order.objects.all().filter(
         created__gte=timezone.now() - timedelta(hours=1, minutes=5),
@@ -48,4 +48,4 @@ def check_orders_lifetime_task():
     for order in last_hour_orders:
         if timezone.now() - order.created > order_lifetime_min:
             order.set_expired()
-    return 'check_orders_lifetime_task finished!'
+    return 'check_order_lifetime_task finished!'

@@ -12,7 +12,7 @@ app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
 
 app.conf.beat_schedule = {
     'every_minute': {
-        'task': 'orders.tasks.check_orders_lifetime_task',
+        'task': 'orders.tasks.check_order_lifetime_task',
         'schedule': crontab(minute='*/1'),
     },
 }
