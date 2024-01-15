@@ -1,9 +1,9 @@
 from decimal import Decimal
 
 from django.contrib.auth import get_user_model
-from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
+from rest_framework.exceptions import ValidationError
 
 from orders.utils import create_sign
 
@@ -49,7 +49,8 @@ class Order(models.Model):
         # raise ValidationError('has_open_loan')
 
     def _validate_credit_score(self):
-        # raise ValidationError('low_credit_score')
+        # checking client credit score
+        # if low: raise ValidationError('low_credit_score')
         self._set_amount_approved()
         self._set_period_approved()
 
@@ -61,4 +62,12 @@ class Order(models.Model):
 
     def set_loan_created(self):
         self.status = self.LOAN_CREATED
+        super().save()
+
+    def set_expired(self):
+        self.status = self.EXPIRED
+        super().save()
+
+    def set_declined(self):
+        self.status = self.DECLINED
         super().save()

@@ -20,4 +20,13 @@ class CreateOrderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = ('user_id', 'amount_requested', 'period_requested')
+        fields = '__all__'
+        read_only_fields = (
+            'created',
+            'updated',
+            'amount_approved',
+            'period_approved',
+            'sign',
+            'contract',
+            'status',
+        )
