@@ -2,6 +2,7 @@ import random
 import time
 from datetime import timedelta
 
+from celery import shared_task
 from django.utils import timezone
 from rest_framework.exceptions import ValidationError
 
@@ -9,10 +10,17 @@ from conf.celery import app
 from orders.models import Order
 from orders.models import StatusChoices
 
+
 @app.task
 def debug_task():
     time.sleep(random.randint(5, 10))
     return 'Hello from debug_task!'
+
+
+@shared_task
+def debug_shared_task():
+    time.sleep(random.randint(5, 10))
+    return 'Hello from debug_shared_task!'
 
 
 @app.task(serializer='json')
@@ -26,11 +34,8 @@ def create_order_task(user_id, amount_requested, period_requested):
         return {
             'id': order.id,
             'user_id': order.user_id,
-            'amount_requested': order.amount_requested,
             'amount_approved': order.amount_approved,
-            'period_requested': order.period_requested,
             'period_approved': order.period_approved,
-            'sign': order.sign,
             'contract': order.contract,
             'status': order.status,
         }
