@@ -46,7 +46,7 @@ def create_order_task(user_id, amount_requested, period_requested):
 @app.task
 def check_order_lifetime_task():
     order_lifetime_min = timedelta(minutes=1)
-    last_hour_orders = Order.objects.all().filter(
+    last_hour_orders = Order.objects.filter(
         created__gte=timezone.now() - timedelta(hours=1, minutes=5),
         status=StatusChoices.NEW
     )
