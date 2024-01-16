@@ -1,5 +1,3 @@
-import random
-import time
 from decimal import Decimal
 
 from django.contrib.auth import get_user_model
@@ -7,7 +5,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from rest_framework.exceptions import ValidationError
 
-from orders.utils import create_sign
+from orders.utils import create_sign, logic_imitation
 
 User = get_user_model()
 
@@ -52,7 +50,7 @@ class Order(models.Model):
     def _validate_credit_score(self):
         # checking client credit score
         # if low: raise ValidationError('low_credit_score')
-        time.sleep(random.randint(1, 5))
+        logic_imitation()
 
     def _set_amount_approved(self):
         self.amount_approved = self.amount_requested
